@@ -6,3 +6,4 @@ streamlit
 tiktoken
 langchain_openai
 langchain_experimental
+tabulate
