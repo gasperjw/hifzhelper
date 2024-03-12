@@ -24,7 +24,7 @@ OPENAI_API_KEY = st.secrets['OPENAI_API_KEY']
 
 
 def create_agent():
-    df = pd.read_csv('/workspaces/hifzhelper/df_Last5Juz.csv')
+    df = pd.read_csv('df_Last5Juz.csv')
     prefix = """"""
     llm = ChatOpenAI(openai_api_key = OPENAI_API_KEY, model = 'gpt-4-turbo-preview', temperature=0)
     agent_executor = create_pandas_dataframe_agent(
