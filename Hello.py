@@ -13,39 +13,64 @@
 # limitations under the License.
 
 import streamlit as st
+import pandas as pd 
+from langchain_openai import ChatOpenAI
+from langchain_experimental.agents import create_pandas_dataframe_agent
 from streamlit.logger import get_logger
 
 LOGGER = get_logger(__name__)
 
+OPENAI_API_KEY = st.secrets['OPENAI_API_KEY']
 
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
+
+def create_agent():
+    df = pd.read_csv('/workspaces/hifzhelper/df_Last5Juz.csv')
+    prefix = """"""
+    llm = ChatOpenAI(openai_api_key = OPENAI_API_KEY, model = 'gpt-4-turbo-preview', temperature=0)
+    agent_executor = create_pandas_dataframe_agent(
+        llm,
+        df,
+        prefix = prefix,
+        agent_type="openai-tools",
+        verbose=True
     )
+    return agent_executor
 
-    st.write("# Welcome to Streamlit! 👋")
+def retrieval_answer(query):
+    agent_executor = create_agent()
+    answer = agent_executor.invoke(query)
+    return answer['output']
 
-    st.sidebar.success("Select a demo above.")
 
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+def main():
+    st.title("Quran Memorization Helper")
+    with st.expander("Learn More About the Project"):
+        st.write("""
+        ### Project Goal
+        To assist in memorizing the Quran by finding and presenting verses similar to the one the user is currently memorizing. This can help in understanding the context and variations in Quranic themes and aid in memorization by association.
+
+        ### Project Information
+        This application is designed to support Quran memorization efforts by retrieving and displaying verses similar to the user's current focus. It utilizes a database of Quranic verses and advanced search techniques to find related ayahs (verses).
+
+        #### Technologies Used
+        - **LLM (Large Language Models)**: For processing queries and understanding the context of the verses.
+        - **Vector Database**: For efficient retrieval of similar verses from the Quran.
+        - **Streamlit**: For creating the web interface of the application.
+
+        #### How it Works
+        - The user inputs a verse or keywords from a verse they are memorizing.
+        - The app processes the query to understand the context and searches for similar verses.
+        - The relevant verses are then displayed on the app interface, helping the user in memorization by providing related context and themes.
+        """)
+    query = st.text_input("Enter the verse or keywords you are memorizing...") 
+    ask_button = st.button("Find Similar Verses")
+    
+    if query and (ask_button or query != ""):
+        st.info("Your Input: " + query)
+        similar_verses = retrieval_answer(query)
+        st.success(similar_verses)
+
 
 
 if __name__ == "__main__":
-    run()
+    main()
