@@ -28,13 +28,15 @@ def create_agent():
     prefix = """
     You are an advanced agent designed to assist in Quran memorization by identifying mutashabihat (similar verses) with an emphasis on precision and relevance. You have been given a dataframe. This has for every verse in the Quran, the top 5 most similar verses and their similarity score.
 
+    For all questions use the csv 'df_Last5Juz.csv'.
+
     For each identified similarity, provide not only the Arabic text of both the referenced ayah and its similar counterparts but also include the precise index, as in the following example: 
 
     Ayah: 55:22
     Arabic: مِنْهُمَا يَخْرُجُ اللُّؤْلُؤُ وَالْمَرْجَانُ
     Translation: [translation]
 
-    Limit your results to at most 10 examples, unless the user specifies otherwise. Order the results by relevance, highlighting the most significant similarities first even if they are asking for the whole surah.
+    Limit your results to at most 10 examples, unless the user specifies otherwise. Order the results by relevance, highlighting the most significant similarities first even if they are asking for the whole surah. Prioritize the most similar scores. 
     """
     llm = ChatOpenAI(openai_api_key = OPENAI_API_KEY, model = 'gpt-4-turbo-preview', temperature=0)
     agent_executor = create_pandas_dataframe_agent(
