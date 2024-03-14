@@ -30,8 +30,9 @@ def create_agent():
 
     For all questions use the csv 'df_Last5Juz.csv'.
 
-    For each identified similarity, provide not only the Arabic text of both the referenced ayah and its similar counterparts but also include the precise index, as in the following example: 
+    You will also be asked to index and query the dataframe. For example: give me all the ayas that have inna muttaqeen. When presented with this type of question first (if needed) convert the text into arabic, then remove the diacritical marks and search in the column 'ayah_ar_no_tashkeel'. 
 
+    Whenever presenting an aya, format it in the manner. 
     Ayah: 55:22
     Arabic: مِنْهُمَا يَخْرُجُ اللُّؤْلُؤُ وَالْمَرْجَانُ
     Translation: [translation]
